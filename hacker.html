@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MATRIX SYSTEM</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#000;color:#00ff41;
+ font-family:monospace;overflow:hidden
+}
+canvas{position:fixed;inset:0;width:100%;height:100%}
+.panel{
+ position:relative;z-index:1;min-height:100vh;
+ display:flex;flex-direction:column;justify-content:center;
+ align-items:center;text-align:center;padding:20px;
+ background:radial-gradient(ellipse,transparent,#000 90%)
+}
+h1{font-size:clamp(30px,8vw,52px);text-shadow:0 0 18px #00ff41}
+p{line-height:1.8;font-size:15px}
+.bar{width:min(300px,90%);height:8px;border:1px solid #00ff41}
+#progress{height:100%;width:0;background:#00ff41}
+</style>
+</head>
+<body>
+<canvas id="matrix"></canvas>
+<div class="panel">
+<h1>MATRIX SYSTEM</h1>
+<p id="msg">> Iniciando sistema...</p>
+<p>> Analizando archivos culturales...</p>
+<p>> Conectando con La Libertad...</p>
+<p>> Acceso autorizado ✓</p>
+<div class="bar"><div id="progress"></div></div>
+<p id="count">REDIRECCIÓN EN 5</p>
+</div>
+<script>
+const c=document.getElementById('matrix');
+const ctx=c.getContext('2d');
+let w,h,drops;
+function resize(){
+ w=c.width=innerWidth;
+ h=c.height=innerHeight;
+ drops=Array(Math.ceil(w/16)).fill(1);
+}
+resize();
+addEventListener('resize',resize);
+const chars='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZアイウエオ#$%';
+function draw(){
+ ctx.fillStyle='rgba(0,0,0,.09)';
+ ctx.fillRect(0,0,w,h);
+ ctx.fillStyle='#00ff41';
+ ctx.font='15px monospace';
+ drops.forEach((y,i)=>{
+  ctx.fillText(chars[Math.random()*chars.length|0],i*16,y*16);
+  if(y*16>h&&Math.random()>.975)drops[i]=0;
+  drops[i]++;
+ });
+}
+setInterval(draw,40);
+let sec=5;
+const timer=setInterval(()=>{
+ sec--;
+ document.getElementById('count').textContent=
+  sec>0?'REDIRECCIÓN EN '+sec:'¡ACCESO CONCEDIDO!';
+ document.getElementById('progress').style.width=((5-sec)*20)+'%';
+ if(sec<=0){
+  clearInterval(timer);
+  document.getElementById('msg').textContent='> Abriendo página cultural...';
+  location.href='danza.html';
+ }
+},1000);
+</script>
+</body>
+</html>
